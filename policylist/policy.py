@@ -1,22 +1,38 @@
-def fetch(filename=DEFAULT_FILENAME):
-    config = Config(filename)
-    config.load()
+import io
+import json
+from policylist import util
+from policylist import schema
+from constants import POLICY_FILENAME, POLICY_LOCAL_FILE
+
+def deserialize_config(json_string):
+    config = json.loads(json_string, object_hook=util._config_hook)
+    try: 
+        util.check_schema(config, schema.CONFIG_SCHEMA)
+    except util.ConfigError as e:
+        raise util.ConfigError("Not a well-formed JSON configuration: {}".format(e))
     return config
+
+def serialize_config(config):
+    return json.dumps(config, cls=util.ConfigEncoder)
+
+def config_from_file(filename):
+    with io.open(filename, encoding='utf-8') as f:
+        return deserialize_config(f.read())
 
 class Config(object):
     """Class for retrieving properties in TLS Policy config.
     """
-    def __init__(self, filename=DEFAULT_FILENAME):
+    def __init__(self, filename=POLICY_LOCAL_FILE):
         self.filename = filename
         self.data = None
 
-    def load():
+    def load(self):
         """Loads JSON configuration from file specified by `filename` property.
         """
-        with open(self.filename) as f:
-            self.data = util.deserialize_config(f.read())
+        with io.open(self.filename, encoding='utf-8') as f:
+            self.data = deserialize_config(f.read())
 
-    def flush(filename=None):
+    def flush(self, filename=None):
         """Flushes configuration to a file as JSON-ified string.
         If a new filename is not given, uses `filename` property.
         """
@@ -25,7 +41,7 @@ class Config(object):
         if filename is None:
             filename = self.filename
         with open(self.filename, 'w') as f:
-            f.write(util.serialize_config(self.data))
+            f.write(serialize_config(self.data))
 
     @property
     def author(self):
@@ -103,7 +119,7 @@ class Config(object):
         """Iterate over (mx_host, mx_policy) - be sure to dedup (TODO)!
         """
         all_mx_items = []
-        for domain in self.tls_policies.keys():
+        for domain in self.tls_policies().keys():
           all_mx_items.extend([(mx_host, domain)
                                for mx_host in domain["mxs"]])
         return all_mx_items

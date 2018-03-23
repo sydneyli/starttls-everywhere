@@ -27,7 +27,8 @@ ADD policylist/ starttls-policy/policylist/
 ADD setup.cfg starttls-policy/setup.cfg
 ADD setup.py starttls-policy/setup.py
 
-RUN apt-get -y install netcat dnsutils telnet
+# Netcat for testing.
+RUN apt-get -y install netcat
 
 # Adding testing scripts
 ADD tests tests
@@ -35,4 +36,4 @@ ADD tests tests
 # Expose SMTP and SMTP submission ports.
 EXPOSE 25 587
 
-# ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash", "-c", "./tests/run.sh"]

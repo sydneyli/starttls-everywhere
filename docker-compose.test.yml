@@ -1,0 +1,40 @@
+# Spins up two mailservers that can talk to each other over port 25.
+# Assigns static IPs to both (10.5.0.5 and 10.5.0.6)
+version: '2.1'
+services:
+
+  sender:
+    build: .
+    container_name: sender
+    hostname: "sender.example.com"
+    networks:
+      - priv-net
+    ports:
+      - "25"
+    # extra_hosts:
+    #   - "valid.example-recipient.com:172.18.1.6"
+    environment:
+      - NAME=sender
+    stdin_open: true
+    tty: true
+    command: "/bin/bash -c tests/tests_sender.sh"
+
+  recipient:
+    build: .
+    hostname: "valid.example-recipient.com"
+    container_name: recipient
+    networks:
+      - priv-net
+    ports:
+      - "25"
+    stdin_open: true
+    tty: true
+    # extra_hosts:
+    #   - "sender.example.com:172.18.1.5"
+    environment:
+      - NAME=valid-example-recipient
+    command: "/bin/bash -c tests/tests_recipient.sh"
+
+networks:
+  priv-net:
+    driver: bridge

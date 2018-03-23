@@ -3,7 +3,7 @@ set -e
 [ -e /var/mail/root ] && rm /var/mail/root
 
 ./tests/setup.sh
-postconf -e myhostname=valid.example-recipient.com
+postconf -e myhostname=recipient
 
 
 # Wait until we receive a message or time out.

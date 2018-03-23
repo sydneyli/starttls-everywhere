@@ -27,7 +27,7 @@ ADD policylist/ starttls-policy/policylist/
 ADD setup.cfg starttls-policy/setup.cfg
 ADD setup.py starttls-policy/setup.py
 
-RUN apt-get -y install netcat
+RUN apt-get -y install netcat dnsutils telnet
 
 # Adding testing scripts
 ADD tests tests

@@ -2,12 +2,13 @@
   "timestamp": "2018-03-30T19:45:16+00:00",
   "author": "Electronic Frontier Foundation https://eff.org",
   "expires": "2018-04-30T19:45:16+00:00",
+  "version": "0.1",
   "pinsets": {},
   "policy-aliases": {
-    "google": { "mode": "enforce", "mxs": [".l.google.com"] },
-    "yahoo": { "mode": "enforce", "mxs": [".yahoodns.net"] },
-    "outlook": { "mode": "enforce", "mxs": [".outlook.com", "outlook.com"] },
-    "icloud": { "mode": "enforce", "mxs": [".icloud.com"] }
+    "google": { "mode": "testing", "mxs": [".l.google.com"] },
+    "yahoo": { "mode": "testing", "mxs": [".yahoodns.net"] },
+    "outlook": { "mode": "testing", "mxs": [".outlook.com", "outlook.com"] },
+    "icloud": { "mode": "testing", "mxs": [".icloud.com"] }
   },
   "policies": {
     "yahoo.com": { "policy-alias": "yahoo" },
@@ -23,10 +24,10 @@
     "live.com": { "policy-alias": "outlook" },
     "hotmail.com": { "policy-alias": "outlook" },
     "outlook.com": { "policy-alias": "outlook" },
-    "qq.com": { "mode": "enforce", "mxs": [".qq.com"] },
-    "yandex.ru": { "mode": "enforce", "mxs": [".yandex.ru"] },
-    "comcast.net": { "mode": "enforce", "mxs": [".comcast.net"] },
-    "facebook.com": { "mode": "enforce", "mxs": [".facebook.com"] },
-    "eff.org": { "mode": "enforce", "mxs": [".eff.org"] }
+    "qq.com": { "mode": "testing", "mxs": [".qq.com"] },
+    "yandex.ru": { "mode": "testing", "mxs": [".yandex.ru"] },
+    "comcast.net": { "mode": "testing", "mxs": [".comcast.net"] },
+    "facebook.com": { "mode": "testing", "mxs": [".facebook.com"] },
+    "eff.org": { "mode": "testing", "mxs": [".eff.org"] }
   }
 }

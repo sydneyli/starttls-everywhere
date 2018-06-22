@@ -304,11 +304,9 @@ class Config(MergableConfig, collections.Mapping):
         """Flushes configuration to a file as JSON-ified string.
         If a new filename is not given, uses `filename` property.
         """
-        if self._data is None:
-            return # no data loaded yet
         if filename is None:
             filename = self.filename
-        with open(self.filename, 'w') as f:
+        with open(filename, 'w') as f:
             f.write(self.dump())
 
     @property

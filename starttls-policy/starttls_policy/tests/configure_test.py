@@ -52,6 +52,10 @@ test_json = '{\
             ".valid.example-recipient.com": {\
                 "mode": "enforce",\
                 "mxs": [".valid.example-recipient.com"]\
+            },\
+            ".testing.example-recipient.com": {\
+                "mode": "testing",\
+                "mxs": [".testing.example-recipient.com"]\
             }\
         }\
     }'
@@ -65,8 +69,13 @@ class TestPostfixGenerator(unittest.TestCase):
         conf.load_from_dict(json.loads(test_json))
         generator = configure.PostfixGenerator("./")
         result = generator._generate(conf) # pylint: disable=protected-access
-        self.assertEqual(result, ".valid.example-recipient.com  "
+        self.assertEqual(result, ".testing.example-recipient.com may \n"
+                         ".valid.example-recipient.com    "
                          "secure match=.valid.example-recipient.com")
+
+    def test_mta_name(self):
+        generator = configure.PostfixGenerator("./")
+        self.assertEqual(generator.mta_name, "Postfix")
 
     def test_instruct_string(self):
         generator = configure.PostfixGenerator("./")

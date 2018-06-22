@@ -1,7 +1,9 @@
 """ Tests for policy.py """
 import unittest
-import json
+
 import datetime
+import json
+import mock
 
 from starttls_policy import policy
 from starttls_policy import util
@@ -39,6 +41,12 @@ class TestConfig(unittest.TestCase):
         }
         # If uncommented, the tests fail. TODO figure out why
         self.conf.policies = {'eff.org': self.sample_policy}
+
+    def test_flush(self):
+        with mock.patch("starttls_policy.policy.open", mock.mock_open()) as m:
+            self.conf.flush("lol.txt")
+            m.assert_called_with("lol.txt", "w")
+            m().write.assert_called_once()
 
     def test_merge_keeps_old_settings(self):
         conf2 = policy.Config()

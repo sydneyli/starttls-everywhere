@@ -61,5 +61,21 @@ class TestPerform(unittest.TestCase):
         main._perform(parser.parse_args(), parser)
         self.assertTrue(main.GENERATORS["exists"].called_with("/etc/starttls-policy"))
 
+    @mock.patch("os.path.exists")
+    @mock.patch("os.makedirs")
+    def test_ensure_directory(self, mock_makedirs, mock_exists):
+        # pylint: disable=protected-access
+        mock_exists.return_value = True
+        main._ensure_directory("")
+        mock_makedirs.assert_not_called()
+
+    @mock.patch("os.path.exists")
+    @mock.patch("os.makedirs")
+    def test_ensure_directory(self, mock_makedirs, mock_exists):
+        # pylint: disable=protected-access
+        mock_exists.return_value = False
+        main._ensure_directory("")
+        mock_makedirs.assert_called_once()
+
 if __name__ == '__main__':
     unittest.main()

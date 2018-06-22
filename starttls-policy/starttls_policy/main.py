@@ -1,3 +1,4 @@
+""" Main entrypoint for starttls-policy CLI tool """
 import argparse
 import os
 import sys
@@ -34,7 +35,7 @@ def _perform(arguments, parser):
         parser.error("no configuration generator exists for '%s'" % arguments.generate)
     _generate(arguments)
 
-def main(cli_args=sys.argv[1:]):
+def main():
     """ Entrypoint for CLI tool. """
     parser = _argument_parser()
     _perform(parser.parse_args(), parser)

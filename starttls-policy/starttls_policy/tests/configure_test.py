@@ -1,13 +1,14 @@
 """ Tests for configure.py """
 
-import json
-import mock
 import unittest
 
-from starttls_policy import constants
+import json
+import mock
+
 from starttls_policy import configure
 
 class MockGenerator(configure.ConfigGenerator):
+    """Mock config generator for testing"""
 
     def _generate(self, policy_list):
         return "generated_config"
@@ -24,6 +25,7 @@ class MockGenerator(configure.ConfigGenerator):
         return "default_filename"
 
 class TestConfigGenerator(unittest.TestCase):
+    """Test the base config generator class"""
     def test_generate(self):
         generator = MockGenerator("./")
         with mock.patch("starttls_policy.configure.open", mock.mock_open()) as m:
@@ -55,18 +57,20 @@ test_json = '{\
     }'
 
 class TestPostfixGenerator(unittest.TestCase):
+    """Test Postfix config generator"""
+
     def test_generate(self):
         from starttls_policy import policy
         conf = policy.Config()
         conf.load_from_dict(json.loads(test_json))
         generator = configure.PostfixGenerator("./")
-        result = generator._generate(conf)
+        result = generator._generate(conf) # pylint: disable=protected-access
         self.assertEqual(result, ".valid.example-recipient.com  "
                          "secure match=.valid.example-recipient.com")
 
     def test_instruct_string(self):
         generator = configure.PostfixGenerator("./")
-        instructions = generator._instruct_string()
+        instructions = generator._instruct_string() # pylint: disable=protected-access
         self.assertTrue("postmap" in instructions)
         self.assertTrue("postconf -e \"smtp_tls_policy_maps=" in instructions)
         self.assertTrue("postfix reload" in instructions)

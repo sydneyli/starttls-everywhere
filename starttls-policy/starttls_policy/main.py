@@ -10,8 +10,14 @@ GENERATORS = {
 
 def _argument_parser():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--lint", help="Lint the policy file.", action="store_true",
+                        default=False)
+    parser.add_argument("--update-only", help="Update the policy file. " +
+                        "If set, no other parameters other than --policy-dir are used.",
+                        action="store_true", dest="update_only", required=False)
     parser.add_argument("--generate", help="The MTA you want to generate a configuration file for.",
-                        dest="generate", required=True)
+                        dest="generate",
+                        required="--update-only" not in sys.argv and "--lint" not in sys.argv)
     # TODO: decide whether to use /etc/ for policy list home
     parser.add_argument("--policy-dir", help="Policy file directory on this computer.",
                         default="/etc/starttls-policy/", dest="policy_dir")
@@ -29,6 +35,9 @@ def _generate(arguments):
     config_generator.manual_instructions()
 
 def _perform(arguments, parser):
+    if arguments.lint:
+        update.validate(os.path.join(arguments.policy_dir, constants.POLICY_FILENAME))
+        return
     if arguments.generate not in GENERATORS:
         parser.error("no configuration generator exists for '%s'" % arguments.generate)
     _generate(arguments)

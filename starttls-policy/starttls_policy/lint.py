@@ -1,17 +1,8 @@
 """ Util for updating local version of the policy file. """
 
-import os
 import json
-import requests
 
-from starttls_policy import constants
 from starttls_policy import policy
-
-def _should_replace(old_config, new_config):
-    return new_config.timestamp > old_config.timestamp
-
-def _get_remote_data(url):
-    return requests.get(url).text
 
 def _pretty_print_relevant_lines(contents, line, column, context=2):
     """ Returns empty string if can't find relevant line/column.
@@ -108,18 +99,3 @@ def validate_contents(contents):
     conf = policy.Config()
     conf.load_from_dict(lint_contents(contents))
     return conf
-
-def update(remote_url=constants.POLICY_REMOTE_URL, filename=constants.POLICY_LOCAL_FILE,
-           force_update=False):
-    """ Fetches and updates local copy of the policy file with the remote file,
-    if local copy is outdated. """
-    data = _get_remote_data(remote_url)
-    remote_config = validate_contents(data)
-    should_replace = True
-    if os.path.isfile(filename):
-        local_config = policy.Config(filename)
-        local_config.load()
-        should_replace = _should_replace(local_config, remote_config)
-    if force_update or should_replace:
-        with open(filename, 'w+') as handle:
-            handle.write(data)

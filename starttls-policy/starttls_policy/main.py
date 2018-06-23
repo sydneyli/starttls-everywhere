@@ -1,10 +1,8 @@
 """ Main entrypoint for starttls-policy CLI tool """
 import argparse
 import os
-import sys
 
 from starttls_policy import configure
-from starttls_policy import constants
 
 GENERATORS = {
     "postfix": configure.PostfixGenerator,
